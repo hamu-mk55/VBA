@@ -38,7 +38,7 @@ Private Function SelectXmlFile() As String
     
     CurrentFilePath = ThisWorkbook.Path & "\"
     
-    'ƒtƒ@ƒCƒ‹ŠJ‚­
+    'ãƒ•ã‚¡ã‚¤ãƒ«é–‹ã
     With Application.FileDialog(msoFileDialogOpen)
         .Filters.Clear
         .Filters.Add "xml", "*.xml"
@@ -65,7 +65,7 @@ Private Function SelectDir() As String
     
     CurrentFilePath = ThisWorkbook.Path & "\"
     
-    'ƒtƒHƒ‹ƒ_ŠJ‚­
+    'ãƒ•ã‚©ãƒ«ãƒ€é–‹ã
     With Application.FileDialog(msoFileDialogFolderPicker)
         .InitialFileName = CurrentFilePath
         .AllowMultiSelect = False
@@ -92,22 +92,22 @@ Private Sub ReadAllFiles(ByVal inputDir As String, ByVal FSO As Object, ByRef ro
     
     fileType = "xml"
     
-    ' row_cnt‚ªãŒÀ’´‚¦‚½‚çŠm”F‚·‚é
+    ' row_cntãŒä¸Šé™è¶…ãˆãŸã‚‰ç¢ºèªã™ã‚‹
     If (row_cnt - 1) > 10000 Then
-        msg_res = MsgBox("ƒf[ƒ^”F" & (row_cnt - 1) & vbCrLf & _
-                         "ƒtƒHƒ‹ƒ_–¼" & inputDir & vbCrLf & _
-                          "‘±‚¯‚Ü‚·‚©H")
+        msg_res = MsgBox("ãƒ‡ãƒ¼ã‚¿æ•°ï¼š" & (row_cnt - 1) & vbCrLf & _
+                         "ãƒ•ã‚©ãƒ«ãƒ€å" & inputDir & vbCrLf & _
+                          "ç¶šã‘ã¾ã™ã‹ï¼Ÿ")
         If msg_res = vbNo Then
             Exit Sub
         End If
     End If
     
-    'ƒtƒHƒ‹ƒ_“à‚ÌƒTƒuƒtƒHƒ‹ƒ_‚ğÄ‹Aˆ—
+    'ãƒ•ã‚©ãƒ«ãƒ€å†…ã®ã‚µãƒ–ãƒ•ã‚©ãƒ«ãƒ€ã‚’å†å¸°å‡¦ç†
     For Each xmldir In FSO.getFolder(inputDir).SubFolders
         Call ReadAllFiles(xmldir.Path, FSO, row_cnt)
     Next
     
-    'ƒtƒHƒ‹ƒ_“à‚Ìƒtƒ@ƒCƒ‹ˆ—
+    'ãƒ•ã‚©ãƒ«ãƒ€å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«å‡¦ç†
     For Each xmlfile In FSO.getFolder(inputDir).Files
         If LCase(FSO.GetExtensionName(xmlfile.Name)) = fileType Then
             xmlpath = inputDir & "\" & xmlfile.Name
@@ -118,74 +118,11 @@ Private Sub ReadAllFiles(ByVal inputDir As String, ByVal FSO As Object, ByRef ro
         
 End Sub
 
-'’Pˆêƒtƒ@ƒCƒ‹‚ğŠJ‚­
-'param: FilePath    XMLƒtƒ@ƒCƒ‹‚Ìƒtƒ‹ƒpƒX
-'param: row_cnt
+'å˜ä¸€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 Private Sub ReadXmlFile(ByVal FilePath As String, ByRef row_cnt As Long)
-    
-    Dim CurrentWorkSheet As Worksheet
-    Dim TableWorkSheet As Worksheet
-    Dim TableName As String
-    
-    Dim StartDate, EndDate As Date
-    Dim SearchKey As String
-    
-    Dim xml As DOMDocument60
-    Dim xml_items As IXMLDOMNodeList
-    Dim xml_item As IXMLDOMNode
-    
-    Dim isFirst As Boolean
-    
-    'ƒpƒ‰ƒ[ƒ^İ’è
-    TableName = "preview"
-    StartDate = Range("C4").Text
-    EndDate = Range("C5").Text
-    SearchKey = Range("C6").Text
-
-    If row_cnt <= 2 Then
-        isFirst = True
-    Else
-        isFirst = False
-    End If
-    
-    'ƒV[ƒg‰Šú‰»
-    Set CurrentWorkSheet = ActiveSheet
-    
-    If CheckSheetExist(TableName) Then
-        Set TableWorkSheet = Worksheets(TableName)
-        If isFirst Then
-            TableWorkSheet.Cells.Clear
-        End If
-    Else
-        If isFirst Then
-            Set TableWorkSheet = Worksheets.Add(after:=CurrentWorkSheet)
-            TableWorkSheet.Name = TableName
-        Else
-            MsgBox ("ERROR: No Sheet")
-            Exit Sub
-        End If
-    End If
-    
-    CurrentWorkSheet.Activate
-        
-    '“Ç‚İ‚İ
-    Dim xr As XmlReader
-    Set xr = New XmlReader
-    
-    Call xr.SetFirstMode(isFirst)
-    Call xr.LoadXmlFile(FilePath)
-    Call xr.SetWorkSheet(TableWorkSheet)
-    Call xr.SetSearchKey(SearchKey)
-    Call xr.SetDate(StartDate, EndDate)
-    
-    Call xr.GetDefectList(row_cnt)
-    
-    With TableWorkSheet.rows
-        .WrapText = False
-        .AutoFit
-    End With
-    
+    'ä¸­èº«çœç•¥
 End Sub
+
 
 
 
