@@ -5,16 +5,14 @@ Sub SaveFile()
     Dim DataSheetName As String
     Dim CsvFileName As String
     
-    DataSheetName = "preview"
+    DataSheetName = "test"
     CsvFileName = "test.csv"
     
     Call save2csvfile(DataSheetName, CsvFileName, 1, 1, 19)
-
-
 End Sub
 
 
-'ƒV[ƒg‚Ì“à—e‚ğCSVƒtƒ@ƒCƒ‹‚Öo—Í
+'ã‚·ãƒ¼ãƒˆã®å†…å®¹ã‚’CSVãƒ•ã‚¡ã‚¤ãƒ«ã¸å‡ºåŠ›
 Private Sub save2csvfile(DataSheetName As String, _
                             CsvFileName As String, _
                             start_row As Long, _
@@ -31,40 +29,26 @@ Private Sub save2csvfile(DataSheetName As String, _
     
     Dim i As Long
     
-    'ƒV[ƒgŠm”F
+    'ã‚·ãƒ¼ãƒˆç¢ºèª
     If CheckSheetExist(DataSheetName) Then
         Set DataSheet = Worksheets(DataSheetName)
     Else
-        MsgBox ("ƒf[ƒ^ƒV[ƒg‚ª‚ ‚è‚Ü‚¹‚ñ" & vbLf & DataSheetName)
+        MsgBox ("ãƒ‡ãƒ¼ã‚¿ã‚·ãƒ¼ãƒˆãŒã‚ã‚Šã¾ã›ã‚“" & vbLf & DataSheetName)
         Exit Sub
     End If
   
-    'CSVo—Í
+    'CSVå‡ºåŠ›
     CsvFile = Application.GetSaveAsFilename(InitialFileName:=CsvFileName, _
-                                            FileFilter:="CSVƒtƒ@ƒCƒ‹(*.csv),*.csv", _
+                                            FileFilter:="CSVãƒ•ã‚¡ã‚¤ãƒ«(*.csv),*.csv", _
                                             FilterIndex:=1, _
-                                            Title:="•Û‘¶ƒtƒ@ƒCƒ‹‚Ìw’è")
+                                            Title:="ä¿å­˜ãƒ•ã‚¡ã‚¤ãƒ«ã®æŒ‡å®š")
     If CsvFile = False Then
-        MsgBox ("ƒtƒ@ƒCƒ‹‚ª‘I‘ğ‚³‚ê‚Ü‚¹‚ñ‚Å‚µ‚½")
+        MsgBox ("ãƒ•ã‚¡ã‚¤ãƒ«ãŒé¸æŠã•ã‚Œã¾ã›ã‚“ã§ã—ãŸ")
         Exit Sub
     End If
     
     Set FSO = CreateObject("Scripting.FileSystemObject")
     Set TS = FSO.OpenTextFile(FileName:=CsvFile, IOMode:=ForWriting, Create:=True)
-    
-    For i = 2 To 10
-        Debug.Print DataSheet.Cells(i, 2), DataSheet.rows(i).Hidden
-    Next i
-    
-    
-    'With wsheet.AutoFilter.Range.Columns(1).SpecialCells(xlCellTypeVisible)
-    '    row_num = .Count - 1
-    '    Debug.Print "NUM: "
-    '    Debug.Print row_num
-    '    For Each R In .rows
-    '        Debug.Print R.Cells(1, 6)
-    '    Next
-    'End With
         
     With DataSheet.Cells(start_row, 1).CurrentRegion.Offset(1, 0)
         row_num = .Resize(.rows.count - 1).Columns(1).SpecialCells(xlCellTypeVisible).count
@@ -79,11 +63,11 @@ Private Sub save2csvfile(DataSheetName As String, _
     Set TS = Nothing
     Set FSO = Nothing
 
-    MsgBox ("CSVo—ÍŠ®—¹")
+    MsgBox ("CSVå‡ºåŠ›å®Œäº†")
     
 End Sub
 
-'Range‚Ì“à—e‚ğACSVŒ`®‚Åˆêso—Í
+'Rangeã®å†…å®¹ã‚’ã€CSVå½¢å¼ã§ä¸€è¡Œå‡ºåŠ›
 Private Function output_rows(ByVal row As Range, _
                                 start_col As Long, _
                                 end_col As Long) As String
@@ -94,15 +78,15 @@ Private Function output_rows(ByVal row As Range, _
     output = ""
     For i = start_col To end_col
         Select Case True
-            '‹ó”’
+            'ç©ºç™½
             Case IsEmpty(row.Cells(1, i))
                 tmp = ""
         
-            '”š‚Ìê‡‚Í•¶š—ñ‚É•ÏŠ·
+            'æ•°å­—ã®å ´åˆã¯æ–‡å­—åˆ—ã«å¤‰æ›
             Case IsNumeric(row.Cells(1, i))
                 tmp = CStr(CDbl(row.Cells(1, i)))
             
-            '‚»‚Ì‘¼
+            'ãã®ä»–
             Case Else
                 tmp = CStr(row.Cells(1, i))
                 tmp = Replace(tmp, vbLf, "")
@@ -120,5 +104,6 @@ Private Function output_rows(ByVal row As Range, _
     output_rows = output
 
 End Function
+
 
 
